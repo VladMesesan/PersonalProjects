@@ -33,13 +33,13 @@ public class Main {
             char[][] createdMap = initiateWorldMap();
             char[][] finishedDungeon = mapGeneration(createdMap);
 
-                while (arrayContains(finishedDungeon) && player.getHp() > 0) {
+                while (arrayContains(finishedDungeon)) {
                     System.out.println();
                     System.out.println("Move: 1.Up    2.Left    3.Right    4.Down");
                     int direction = reader.nextInt();
                     reader.nextLine();
                     try {
-                        int playerLocationAfterMoving = playerMove(finishedDungeon, player, direction);
+                        int playerLocationAfterMoving = playerMove(finishedDungeon, direction);
                         if (playerLocationAfterMoving == 1) {
                             int randomEnemy = (int) (Math.random() * 3 - 1 + 1);
                             if (randomEnemy == 0) {
@@ -70,11 +70,11 @@ public class Main {
                     } catch (ArrayIndexOutOfBoundsException ex) {
                         System.out.println("You hit your head on a wall.");
                 }
-                    if (player.getHp() > 0) {
-                        System.out.println("You find the stairs and descend.");
-                        System.out.println("The steps seem endless, but you eventually reach the lower level.");
-                        System.out.println();
-                    }
+            }
+            if (player.getHp() > 0) {
+                System.out.println("You find the stairs and descend.");
+                System.out.println("The steps seem endless, but you eventually reach the lower level.");
+                System.out.println();
             }
         }
         System.out.println("Game over!");
@@ -271,26 +271,31 @@ public class Main {
         int playerX = worldMap.length - 1;
         int playerY = (int) (Math.random() * ((worldMap[playerX].length - 1) + 1));
         for (int i = 0; i< worldMap.length; i++) {
-            for (int j = 0; j < worldMap[i].length; j++) {
+            for (int j = 0; j < worldMap[i].length; j++) { //generating the exit
                 worldMap[i][j] = '▢';
                 worldMap[exitX][exitY] = '▣';
                 worldMap[playerX][playerY] = '☲';
             }
         }
 
-        for (int i = 0; i< worldMap.length; i++) {
+        for (int i = 0; i< worldMap.length; i=i+4) { //generating healing wells
+            for (int j = 0; j < worldMap[i].length; j=j+4) {
+                int healX = (int) (Math.random() * ((worldMap.length - 1) + 1));
+                int healY = (int) (Math.random() * ((worldMap[i].length - 1) + 1));
+                if (worldMap[healX][healY] == '▢') {
+                    worldMap[healX][healY] = '▩';
+                }
+            }
+        }
+
+        for (int i = 0; i< worldMap.length; i++) { //generating enemies
             for (int j = 0; j < worldMap[i].length; j++) {
                 int enemyX = (int) (Math.random() * ((worldMap.length - 1) + 1));
                 int enemyY = (int) (Math.random() * ((worldMap[i].length - 1) + 1));
                 if (worldMap[enemyX][enemyY] == '▢') {
                     worldMap[enemyX][enemyY] = '☒';
                 }
-                int healX = (int) (Math.random() * ((worldMap.length - 1) + 1));
-                int healY = (int) (Math.random() * ((worldMap[i].length - 1) + 1));
-                if (worldMap[healX][healY] == '▢') {
-                    worldMap[healX][healY] = '▩';
-                }
-                System.out.print(worldMap[i][j] + " ");
+                System.out.print(worldMap[i][j] + " "); // +printing the map
             }
             System.out.println();
         }
@@ -306,7 +311,7 @@ public class Main {
     return false;
 }
 
-    public static int playerMove (char[][] worldMap, PlayerCharacter player, int direction) {
+    public static int playerMove (char[][] worldMap, int direction) {
             for (int i = 0; i < worldMap.length; i++) {
                 for (int j = 0; j < worldMap[i].length; j++) {
                     if (worldMap[i][j] == '☲') {
