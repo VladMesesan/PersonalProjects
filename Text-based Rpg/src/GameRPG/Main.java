@@ -29,51 +29,55 @@ public class Main {
         System.out.println("----------------------------------------");
         System.out.println();
 
-        while (true) {
+        while (player.getHp() > 0) {
             char[][] createdMap = initiateWorldMap();
             char[][] finishedDungeon = mapGeneration(createdMap);
-            while (arrayContains(finishedDungeon)) {
-                System.out.println();
-                System.out.println("Move: 1.Up    2.Left    3.Right    4.Down");
-                int direction = reader.nextInt();
-                reader.nextLine();
-                try {
-                    int playerLocationAfterMoving = playerMove(finishedDungeon, player, direction);
-                    if (playerLocationAfterMoving == 1) {
-                        int randomEnemy = (int) (Math.random() * 3 - 1 + 1);
-                        if (randomEnemy == 0) {
-                            NPC rat = spawnRat();
-                            battlePhase(player, rat);
-                            displayBattleResults(player, rat);
-                        } else if (randomEnemy == 1) {
-                            NPC thug = spawnThug();
-                            battlePhase(player, thug);
-                            displayBattleResults(player, thug);
-                        } else {
-                            NPC assassin = spawnAssassin();
-                            battlePhase(player, assassin);
-                            displayBattleResults(player, assassin);
-                        }
-                    } else if (playerLocationAfterMoving == 2) {
-                        healingWell(player);
-                    } else if (playerLocationAfterMoving == 3) {
 
-                    }
+                while (arrayContains(finishedDungeon) && player.getHp() > 0) {
+                    System.out.println();
+                    System.out.println("Move: 1.Up    2.Left    3.Right    4.Down");
+                    int direction = reader.nextInt();
+                    reader.nextLine();
+                    try {
+                        int playerLocationAfterMoving = playerMove(finishedDungeon, player, direction);
+                        if (playerLocationAfterMoving == 1) {
+                            int randomEnemy = (int) (Math.random() * 3 - 1 + 1);
+                            if (randomEnemy == 0) {
+                                NPC rat = spawnRat();
+                                battlePhase(player, rat);
+                                displayBattleResults(player, rat);
+                            } else if (randomEnemy == 1) {
+                                NPC thug = spawnThug();
+                                battlePhase(player, thug);
+                                displayBattleResults(player, thug);
+                            } else {
+                                NPC assassin = spawnAssassin();
+                                battlePhase(player, assassin);
+                                displayBattleResults(player, assassin);
+                            }
+                        } else if (playerLocationAfterMoving == 2) {
+                            healingWell(player);
+                        } else if (playerLocationAfterMoving == 3) {
 
-                    for (int i = 0; i < finishedDungeon.length; i++) {
-                        for (int j = 0; j < finishedDungeon[i].length; j++) {
-                            System.out.print(finishedDungeon[i][j] + " ");
                         }
+
+                        for (int i = 0; i < finishedDungeon.length; i++) {
+                            for (int j = 0; j < finishedDungeon[i].length; j++) {
+                                System.out.print(finishedDungeon[i][j] + " ");
+                            }
+                            System.out.println();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException ex) {
+                        System.out.println("You hit your head on a wall.");
+                }
+                    if (player.getHp() > 0) {
+                        System.out.println("You find the stairs and descend.");
+                        System.out.println("The steps seem endless, but you eventually reach the lower level.");
                         System.out.println();
                     }
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                    System.out.println("You hit your head on a wall.");
-                }
             }
-            System.out.println("You find the stairs and descend.");
-            System.out.println("The steps seem endless, but you eventually reach the lower level.");
-            System.out.println();
         }
+        System.out.println("Game over!");
     }
 
 

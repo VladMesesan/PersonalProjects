@@ -13,6 +13,5 @@ public class testA extends C{
         C c = new testA(); // C c = new C(); does not work as shown above
         D d = new D(4);
 
-        c.rea
     }
 }
